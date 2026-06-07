@@ -1,4 +1,4 @@
-# TCC-Replay-Attacks-em-Aplica-es-Web-com-Jason-Web-Token
+# TCC-Replay-Attacks-em-Aplicacoes-Web-com-Jason-Web-Token
 
 Ambiente de teste (Testbed) desenvolvido para o TCC2 — avaliação comparativa de estratégias de mitigação de Replay Attacks em APIs que utilizam JSON Web Tokens.
 
