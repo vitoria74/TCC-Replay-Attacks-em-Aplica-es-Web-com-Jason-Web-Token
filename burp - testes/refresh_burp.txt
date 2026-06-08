@@ -1,0 +1,31 @@
+gerando-acess-token:
+
+POST /login HTTP/1.1
+Host: 127.0.0.1:3004
+Content-Type: application/json
+Content-Length: 45
+
+{"username":"vitoria","password":"123456"}
+
+-----------------------------------------------------------
+
+tentativa:
+
+POST /transferir HTTP/1.1
+Host: 127.0.0.1:3004
+Authorization: Bearer COLE_O_ACCESS_TOKEN_AQUI
+Content-Type: application/json
+Content-Length: 2
+
+{}
+
+-------------------------------------------------------
+
+gerando-novo-acess-token-com-refresh:
+
+POST /refresh HTTP/1.1
+Host: 127.0.0.1:3004
+Content-Type: application/json
+Content-Length: 106
+
+{"refreshToken":"COLE_O_REFRESH_TOKEN_AQUI"}

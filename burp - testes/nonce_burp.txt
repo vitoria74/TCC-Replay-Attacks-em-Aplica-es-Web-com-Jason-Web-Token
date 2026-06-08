@@ -1,0 +1,32 @@
+se o gerando-nonce não funcionar, dê dois enters depois da linha Content-Length: 0 
+
+------------------------------------------------------------
+
+gerando-token:
+
+POST /login HTTP/1.1
+Host: 127.0.0.1:3003
+Content-Type: application/json
+Content-Length: 45
+
+{"username":"vitoria","password":"123456"}
+
+-------------------------------------------------------------
+
+gerando-nonce:
+
+GET /gerar-nonce HTTP/1.1
+Host: 127.0.0.1:3003
+Content-Length: 0
+
+--------------------------------------------------------
+
+tentativa:
+
+POST /transferir HTTP/1.1
+Host: 127.0.0.1:3003
+Authorization: Bearer COLE_O_TOKEN_AQUI
+Content-Type: application/json
+Content-Length: 56
+
+{"nonce":"COLE_O_NONCE_AQUI","valor":100}

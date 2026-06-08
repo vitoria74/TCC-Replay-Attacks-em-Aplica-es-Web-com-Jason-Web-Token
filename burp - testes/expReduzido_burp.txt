@@ -1,0 +1,20 @@
+app_mitigadoTempoDeExpReduzido.js
+
+POST /login HTTP/1.1
+Host: 127.0.0.1:3002
+Content-Type: application/json
+Content-Length: 46
+
+{"username": "vitoria", "password": "123456"}
+
+---------------------------------------------------------
+
+log_app_mitigadoTempoDeExpReduzido.js:
+
+POST /transferir HTTP/1.1
+Host: 127.0.0.1:3002
+Authorization: Bearer COLE_O_TOKEN_AQUI
+Content-Type: application/json
+Content-Length: 2
+
+{}

@@ -1,0 +1,32 @@
+gerando-token
+
+POST /login HTTP/1.1
+Host: 127.0.0.1:3001
+Content-Type: application/json
+Content-Length: 42
+
+{"username":"vitoria","password":"123456"}
+
+---------------------------------------------
+
+tentativa
+
+POST /transferir HTTP/1.1
+Host: 127.0.0.1:3001
+Authorization: Bearer cole o token gerado aqui
+Content-Type: application/json
+Content-Length: 2
+
+{}
+
+-----------------------------------------------
+
+logout
+
+POST /logout HTTP/1.1
+Host: 127.0.0.1:3001
+Authorization: Bearer cole o token aqui
+Content-Type: application/json
+Content-Length: 2
+
+{}
