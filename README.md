@@ -55,20 +55,7 @@ Ambiente de teste (Testbed) desenvolvido para o TCC2 — avaliação comparativa
 
 ---
 
-## Passo 1 — Inicializar o Redis
-
-```bash
-# Linux (Ubuntu/Debian)
-sudo systemctl start redis-server
-
-# Verificar se está rodando
-redis-cli ping
-# Esperado: PONG
-```
-
----
-
-## Passo 2 — Instalar as dependências (apenas na primeira vez)
+## Passo 1 — Instalar as dependências (apenas na primeira vez)
 
 Repita em cada pasta de cenário:
 
@@ -83,9 +70,32 @@ O cenário `exp-reduzido` e `sem-mitigacao` não usam Redis — instale apenas `
 
 ---
 
+## Passo 2 — Inicializar o Redis (`jti`, `nonce`, `refresh`)
+
+```bash
+# Linux (Ubuntu)
+sudo systemctl start redis-server
+
+# Verificar se está rodando
+redis-cli ping
+# Esperado: PONG
+```
+
+---
+
 ## Passo 3 — Executar os experimentos
 
 ### Como rodar cada cenário
+
+- Observação: Para o cenário `sem-mitigacao` você deve gerar o token via Burp Suite, copiar e colar dentro do código `teste_semMitigacao_replay.js` na variável TOKEN_INTERCEPTADO.
+
+```bash
+# Captura token via Burp Suite ou curl:
+curl -s -X POST http://127.0.0.1:3000/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"vitoria","password":"123456"}'
+# Copie o token retornado e cole em teste_semMitigacao_replay.js
+```
 
 ```bash
 # Terminal 1: inicia o servidor
@@ -94,6 +104,8 @@ node semMitigacao.js   # ou JTI.js, expReduzido.js, etc.
 # Terminal 2: roda o teste de carga
 k6 run teste_semMitigacao.js
 ```
+
+- Para os cenários que usam o Redis - `jti`, `nonce`, `refresh` -, rodar o comando  `redis-cli INFO memory | grep human` (Solicita ao Redis todas as estatísticas detalhadas de uso de memória)
 
 ### Sequência recomendada para coleta de métricas comparativas
 
@@ -108,32 +120,22 @@ redis-cli FLUSHDB
 
 ## Guia dos Experimentos
 
-### Experimento 1 — Confirmar a vulnerabilidade (baseline)
+### Experimento 1 — Medir desempenho (carga legítima)
 
-**Objetivo:** provar que o cenário sem mitigação é vulnerável ao replay.
-
-```bash
-# Terminal 1
-node sem-mitigacao/semMitigacao.js
-
-# Terminal 2 — captura token via Burp Suite ou curl:
-curl -s -X POST http://127.0.0.1:3000/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"vitoria","password":"123456"}'
-# Copie o token retornado e cole em teste_semMitigacao_replay.js
-
-# Terminal 2 — teste de replay
-k6 run sem-mitigacao/teste_semMitigacao_replay.js
-# Esperado: 100% das requisições retornam 200 (vulnerável)
-```
-
-### Experimento 2 — Medir desempenho (carga legítima)
-
-**Objetivo:** coletar métricas de latência e throughput de cada cenário.
+**Objetivo:** coletar métricas de latência e throughput de cada cenário, CPU e RAM
 
 Execute o teste de carga de cada estratégia e registre:
 - `http_req_duration` (média, p95, p99)
 - `http_reqs` (RPS total)
+
+Execute o pidstat de cada estratégia (apenas carga) e registre:
+- `%CPU` (CPU)
+- `%MEM` (Memória RAM)
+
+```bash
+pgrep -f "node nomeDoArquivo.js" -> Esse comando vai gerar o PID da aplicação. Copie e cole no campo <PID> do pidstat.
+pidstat -p <PID> -r -u 1 30
+```
 
 ```bash
 k6 run sem-mitigacao/teste_semMitigacao.js    # baseline
@@ -143,7 +145,7 @@ k6 run nonce/teste_nonce_carga.js             # nonce
 k6 run refresh/teste_refresh_carga.js         # refresh
 ```
 
-### Experimento 3 — Confirmar o bloqueio do replay (por cenário)
+### Experimento 2 — Confirmar o bloqueio do replay (por cenário)
 
 ```bash
 k6 run jti/teste_JTI_replay.js                      # bloqueio pós-logout
