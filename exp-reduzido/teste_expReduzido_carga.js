@@ -5,9 +5,6 @@
 // o script faz login a cada iteração para garantir que o token seja
 // sempre válido durante o teste — refletindo o comportamento real
 // de um cliente que precisa se reautenticar frequentemente.
-//
-// esta estratégia NÃO usa Redis. O overhead esperado é
-// próximo ao baseline, com a proteção vindo apenas do tempo de vida curto.
 
 import http from 'k6/http';
 import { sleep, check } from 'k6';
