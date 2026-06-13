@@ -6,13 +6,13 @@
 //
 // Fluxo do teste:
 //   1. VU faz login e obtém token.
-//   2. VU faz uma transferência legítima (deve passar — 200).
+//   2. VU faz uma transferência legítima (deve passar).
 //   3. VU faz logout (JTI vai para a blacklist do Redis).
-//   4. VU tenta usar o mesmo token novamente (deve ser bloqueado — 401).
+//   4. VU tenta usar o mesmo token novamente (deve ser bloqueado).
 //
 // Esperado:
-//   - Transferência antes do logout: 200 ✓
-//   - Transferência após logout (replay): 401 ✓ (protegido)
+//   - Transferência antes do logout: Sucesso
+//   - Transferência após logout (replay): Negado
 
 import http from 'k6/http';
 import { sleep, check } from 'k6';
