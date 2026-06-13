@@ -6,14 +6,14 @@
 // Fluxo do teste:
 //   1. VU faz login e obtém token (válido por 30s).
 //   2. VU aguarda a expiração do token (31s de sleep).
-//   3. VU tenta usar o token expirado —> deve ser bloqueado (401).
+//   3. VU tenta usar o token expirado —> deve ser bloqueado.
 //
-// IMPORTANTE: Este script roda 1 VU por 60s para dar tempo ao token
+// Este script roda 1 VU por 60s para dar tempo ao token
 // de expirar antes da tentativa de replay.
 //
 // Esperado:
-//   - Transferência com token fresco (antes do sleep): 200 
-//   - Transferência após expiração (replay): 401 (protegido)
+//   - Transferência com token fresco (antes do sleep): Sucesso 
+//   - Transferência após expiração (replay): Negado
 
 import http from 'k6/http';
 import { sleep, check } from 'k6';
