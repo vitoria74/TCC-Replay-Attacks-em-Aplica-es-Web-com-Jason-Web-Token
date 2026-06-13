@@ -13,10 +13,10 @@ const SECRET = process.env.JWT_SECRET || 'chave_mestra_reserva';
 // CENÁRIO JTI COM BLACKLISTING
 //
 // O JTI (JWT ID) é um identificador único embutido em cada token.
-// A blacklist no Redis armazena os JTIs de tokens REVOGADOS, por
+// A blacklist no Redis armazena os JTIs de tokens revogados, por
 // exemplo, após um logout explícito ou encerramento de sessão forçado.
 //
-// O overhead de desempenho vem da consulta ao Redis em TODA requisição
+// O overhead de desempenho vem da consulta ao Redis em toda requisição
 // autenticada, mesmo as legítimas precisam verificar se o JTI está
 // na blacklist.
 // -------------------------------------------------------------------
@@ -73,7 +73,7 @@ app.post('/transferir', async (req, res) => {
         const jti = decoded.jti;
 
         // Consulta ao Redis: verifica se o JTI deste token foi revogado.
-        // Esta consulta ocorre em TODA requisição autenticada — é aqui
+        // Esta consulta ocorre em toda requisição autenticada — é aqui
         // que o overhead de desempenho do JTI é gerado e medido.
         const revogado = await redisClient.get(`blacklist:${jti}`);
 
